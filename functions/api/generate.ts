@@ -2,12 +2,12 @@
 import { GoogleGenAI, Modality } from "@google/genai";
 import type { DesignResultData, FurnitureItem } from '../../types';
 
-// Define as variáveis de ambiente que esperamos da Cloudflare
+// Define the environment variables we expect from Cloudflare
 interface Env {
   API_KEY: string;
 }
 
-// Define a estrutura do corpo da requisição esperada
+// Define the expected request body structure
 interface GenerateRequestBody {
     base64Image: string;
     mimeType: string;
@@ -19,16 +19,16 @@ interface GenerateRequestBody {
 }
 
 function cleanJsonString(jsonString: string): string {
-  // Remove a sintaxe de bloco de código markdown se presente
+  // Remove markdown code block syntax if present
   let cleanStr = jsonString.replace(/^```json\s*|```$/g, '').trim();
 
-  // Encontra a primeira ocorrência de '{' ou '['
+  // Find the first occurrence of '{' or '['
   const startIndex = cleanStr.search(/[[{]/);
   if (startIndex === -1) {
     return cleanStr;
   }
 
-  // Encontra a última ocorrência de '}' ou ']'
+  // Find the last occurrence of '}' or ']'
   const lastBrace = cleanStr.lastIndexOf('}');
   const lastBracket = cleanStr.lastIndexOf(']');
   const endIndex = Math.max(lastBrace, lastBracket);
@@ -37,7 +37,7 @@ function cleanJsonString(jsonString: string): string {
     return cleanStr;
   }
 
-  // Extrai a substring que parece ser JSON
+  // Extract the substring that appears to be JSON
   return cleanStr.substring(startIndex, endIndex + 1);
 }
 
@@ -57,7 +57,7 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
 
     const apiKey = context.env.API_KEY;
     if (!apiKey) {
-      return new Response(JSON.stringify({ error: "A variável de ambiente API_KEY não está configurada no servidor." }), {
+      return new Response(JSON.stringify({ error: "The API_KEY environment variable is not configured on the server." }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
       });
@@ -66,26 +66,26 @@ export const onRequestPost = async (context: { request: Request; env: Env }): Pr
     const ai = new GoogleGenAI({ apiKey });
 
     const locationInfo = location 
-      ? `O usuário está localizado perto da latitude ${location.lat} e longitude ${location.lon}. Priorize varejistas que são populares e acessíveis nesta região.`
-      : 'Localização do usuário não fornecida.';
+      ? `The user is located near latitude ${location.lat} and longitude ${location.lon}. Prioritize retailers that are popular and accessible in this region.`
+      : 'User location not provided.';
 
-    const prompt = `Você é um designer de interiores de IA. Redecore o espaço na imagem fornecida com base nos seguintes critérios.
+    const prompt = `You are an AI interior designer. Redecorate the space in the provided image based on the following criteria.
 
-Critérios:
-- Tipo de Espaço: ${spaceType}
-- Orçamento Máximo: $${budget}
-- Paleta de Cores: ${colorPalette}
-- Estilo: Moderno e minimalista
-- Lojas Preferenciais: ${preferredStores.length > 0 ? preferredStores.join(', ') : 'Qualquer varejista online popular'}
-- Dica de Localização: ${locationInfo}
+Criteria:
+- Space Type: ${spaceType}
+- Maximum Budget: $${budget}
+- Color Palette: ${colorPalette}
+- Style: Modern and minimalist
+- Preferred Stores: ${preferredStores.length > 0 ? preferredStores.join(', ') : 'Any popular online retailer'}
+- Location Hint: ${locationInfo}
 
-Sua resposta deve conter duas partes:
-1. Uma imagem: A nova imagem fotorrealista do espaço decorado.
-2. Texto: Um array JSON válido para uma lista de compras.
+Your response must contain two parts:
+1. An image: The new photorealistic image of the decorated space.
+2. Text: A valid JSON array for a shopping list.
 
-O custo total de todos os itens na lista de compras não deve exceder o orçamento.
+The total cost of all items on the shopping list must not exceed the budget.
 
-A parte de texto da sua resposta DEVE SER APENAS os dados JSON brutos. Não inclua explicações, texto introdutório ou blocos de código markdown como \`\`\`json. O JSON deve seguir este esquema exato:
+The text part of your response MUST BE ONLY the raw JSON data. Do not include explanations, introductory text, or markdown code blocks like \`\`\`json. The JSON must follow this exact schema:
 [
   {
     "itemName": "string",
@@ -120,15 +120,15 @@ A parte de texto da sua resposta DEVE SER APENAS os dados JSON brutos. Não incl
             const cleanedJson = cleanJsonString(part.text);
             furniture = JSON.parse(cleanedJson);
           } catch (e) {
-            console.error("Falha ao analisar JSON da resposta do modelo:", part.text, e);
-            throw new Error("A IA retornou uma lista de itens inválida.");
+            console.error("Failed to parse JSON from model response:", part.text, e);
+            throw new Error("The AI returned an invalid item list.");
           }
         }
       }
     }
 
     if (!generatedImage || furniture.length === 0) {
-      throw new Error("A IA não conseguiu gerar um design completo.");
+      throw new Error("The AI failed to generate a complete design.");
     }
 
     const designResult: DesignResultData = { generatedImage, furniture };
@@ -139,9 +139,9 @@ A parte de texto da sua resposta DEVE SER APENAS os dados JSON brutos. Não incl
     });
 
   } catch (error) {
-    console.error("Erro na função da Cloudflare:", error);
-    const errorMessage = error instanceof Error ? error.message : "Ocorreu um erro inesperado no servidor.";
-    return new Response(JSON.stringify({ error: `Falha ao gerar o design. ${errorMessage}` }), {
+    console.error("Error in Cloudflare function:", error);
+    const errorMessage = error instanceof Error ? error.message : "An unexpected server error occurred.";
+    return new Response(JSON.stringify({ error: `Failed to generate design. ${errorMessage}` }), {
         status: 500,
         headers: { 'Content-Type': 'application/json' },
     });
