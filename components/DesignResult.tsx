@@ -37,15 +37,15 @@ const DesignResult: React.FC<DesignResultProps> = ({ result, onReset }) => {
                 <img src={result.generatedImage} alt="Generated interior design" className="w-full h-auto object-cover"/>
                 
                 <div className="p-4 md:p-6 bg-slate-50 print:bg-white">
-                    <div className="flex justify-between items-center mb-4">
+                    <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
                         <h3 className="text-xl font-bold text-gray-800">Shopping List</h3>
-                        <div className="flex items-center space-x-4">
-                            <div className="text-lg font-semibold text-gray-700 bg-green-100 text-green-800 px-4 py-1 rounded-full print:bg-transparent print:text-black print:p-0 print:border print:border-gray-300">
+                        <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+                            <div className="text-lg text-center font-semibold text-gray-700 bg-green-100 text-green-800 px-4 py-2 rounded-full print:bg-transparent print:text-black print:p-0 print:border print:border-gray-300 w-full md:w-auto">
                                 Total: ${totalCost.toLocaleString()}
                             </div>
                             <button
                                 onClick={handlePrint}
-                                className="bg-gradient-to-r from-indigo-600 to-purple-500 text-white font-bold py-2 px-4 rounded-lg hover:shadow-lg transition-all duration-300 flex items-center justify-center print:hidden"
+                                className="w-full md:w-auto bg-gradient-to-r from-indigo-600 to-purple-500 text-white font-bold py-2 px-4 rounded-lg hover:shadow-lg transition-all duration-300 flex items-center justify-center print:hidden"
                             >
                                 <PrintIcon className="h-5 w-5 mr-2" />
                                 Get Shopping List

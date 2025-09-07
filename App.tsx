@@ -98,7 +98,7 @@ const App: React.FC = () => {
       case AppState.IDLE:
       default:
         return (
-          <div className="w-full max-w-lg mx-auto p-4 md:p-8 space-y-4">
+          <div className="w-full max-w-lg mx-auto p-4 md:p-8 space-y-6">
             <div className="text-center">
               <h1 className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-500">decor.ai</h1>
               <p className="mt-3 text-lg text-gray-600">Upload a photo. Set your style. Get your dream space.</p>

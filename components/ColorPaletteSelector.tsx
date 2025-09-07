@@ -22,7 +22,7 @@ const ColorPaletteSelector: React.FC<ColorPaletteSelectorProps> = ({ selectedPal
         <SwatchIcon className="h-6 w-6 mr-2 text-indigo-500" />
         Select a Color Palette
       </label>
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {PALETTES.map((palette) => (
           <div
             key={palette.name}
