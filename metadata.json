@@ -1,0 +1,7 @@
+{
+  "name": "decor.ai",
+  "description": "Upload a photo of your room, set your style, and let our AI generate a personalized interior design with a shoppable list of furniture and decor.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

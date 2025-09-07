@@ -1,0 +1,16 @@
+{
+  "name": "decor-ai-cloudflare",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler pages deploy ."
+  },
+  "dependencies": {
+    "@google/genai": "^1.17.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240725.0",
+    "typescript": "^5.0.4",
+    "wrangler": "^3.0.0"
+  }
+}
